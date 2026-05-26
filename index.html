@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FitMacro</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- APP WRAPPER (mobile frame) -->
+<div class="app-frame">
+  <div class="phone-screen">
+
+    <!-- ====== SCREEN: INICIO ====== -->
+    <div class="screen active" id="screen-inicio">
+      <div class="screen-content">
+        <!-- Header -->
+        <div class="header-bar">
+          <div class="brand-logo">FIT<span class="brand-accent">MACRO</span></div>
+          <div class="header-icons">
+            <button class="icon-btn" onclick="showToast('Notificaciones')">🔔</button>
+            <div class="avatar-circle"></div>
+          </div>
+        </div>
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+          <div class="hero-text">
+            <p class="hero-line discipline">DISCIPLINA</p>
+            <p class="hero-line hoy">HOY</p>
+            <p class="hero-line resultados">RESULTADOS</p>
+            <p class="hero-line manana">MAÑANA</p>
+          </div>
+          <div class="hero-figure">💪</div>
+        </div>
+
+        <!-- Comida de hoy -->
+        <div class="comida-hoy-card">
+          <div class="comida-hoy-left">
+            <p class="comida-label">Comida de hoy</p>
+            <p class="comida-name">4 Huevos sin yemas</p>
+            <p class="comida-kcal">60 kcal</p>
+          </div>
+          <div class="comida-icon">🍴</div>
+        </div>
+
+        <!-- Resumen del día -->
+        <p class="section-title">Resumen del día</p>
+        <div class="resumen-row">
+          <div class="resumen-pill yellow">
+            <span class="resumen-num">1,850</span>
+            <span class="resumen-unit">Kcal restantes</span>
+          </div>
+          <div class="resumen-pill blue">
+            <span class="resumen-num">120 g</span>
+            <span class="resumen-unit">de 180 g</span>
+          </div>
+          <div class="resumen-pill green">
+            <span class="resumen-num">85 g</span>
+            <span class="resumen-unit">Carbohidratos</span>
+          </div>
+        </div>
+
+        <!-- Resumenes del día (shortcuts) -->
+        <p class="section-title">Resumenes del día</p>
+        <div class="shortcuts-row">
+          <div class="shortcut-item" onclick="switchScreen('registro')">
+            <div class="shortcut-icon food">🥗</div>
+            <span>Alimentos</span>
+          </div>
+          <div class="shortcut-item" onclick="switchScreen('registro')">
+            <div class="shortcut-icon grid">⊞</div>
+            <span>Registros</span>
+          </div>
+          <div class="shortcut-item" onclick="switchScreen('progreso')">
+            <div class="shortcut-icon chart">📊</div>
+            <span>Progreso</span>
+          </div>
+          <div class="shortcut-item" onclick="showToast('Sugerencia del día: Come más proteína 💪')">
+            <div class="shortcut-icon thumb">👍</div>
+            <span>Sugerencia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== SCREEN: REGISTRO ====== -->
+    <div class="screen" id="screen-registro">
+      <div class="screen-content">
+        <!-- Header -->
+        <div class="header-simple">
+          <button class="back-btn" onclick="switchScreen('inicio')">←</button>
+          <h2 class="screen-title-text">Registrar Alimento</h2>
+        </div>
+
+        <!-- Buscador -->
+        <div class="search-box">
+          <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar alimentos...." oninput="filterAlimentos(this.value)">
+        </div>
+
+        <!-- Tipo de comida -->
+        <p class="section-title">Comida</p>
+        <div class="meal-types">
+          <div class="meal-type active" id="mt-desayuno" onclick="selectMeal('desayuno')">
+            <div class="meal-icon green-bg">🌿</div>
+            <span>Desayuno</span>
+          </div>
+          <div class="meal-type" id="mt-almuerzo" onclick="selectMeal('almuerzo')">
+            <div class="meal-icon orange-bg">🥗</div>
+            <span>Almuerzo</span>
+          </div>
+          <div class="meal-type" id="mt-cena" onclick="selectMeal('cena')">
+            <div class="meal-icon purple-bg">🌙</div>
+            <span>Cena</span>
+          </div>
+          <div class="meal-type" id="mt-snack" onclick="selectMeal('snack')">
+            <div class="meal-icon red-bg">🍎</div>
+            <span>Snack</span>
+          </div>
+        </div>
+
+        <!-- Alimentos recientes -->
+        <p class="section-title">Alimentos recientes</p>
+        <div class="alimentos-list" id="alimentosList">
+          <!-- populated by JS -->
+        </div>
+
+        <!-- Botones -->
+        <div class="action-buttons">
+          <button class="btn-action btn-agregar" onclick="agregarAlimento()">Agregar</button>
+          <button class="btn-action btn-editar" onclick="editarAlimento()">Editar</button>
+          <button class="btn-action btn-eliminar" onclick="eliminarAlimento()">Eliminar</button>
+        </div>
+
+        <!-- Resumen del día en registro -->
+        <p class="section-title">Resumen del día</p>
+        <div class="resumen-registro">
+          <span class="rr-num yellow" id="rr-kcal">1,850</span>
+          <span class="rr-label yellow">Kcal restantes</span>
+          <span class="rr-num green" id="rr-prot">120g</span>
+          <span class="rr-label green">Proteínas</span>
+          <span class="rr-num blue" id="rr-carb">65g</span>
+          <span class="rr-label blue">Carbohidratos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== SCREEN: PROGRESO ====== -->
+    <div class="screen" id="screen-progreso">
+      <div class="screen-content">
+        <!-- Header -->
+        <div class="header-bar">
+          <h2 class="screen-title-center">Progreso</h2>
+          <div class="avatar-circle"></div>
+        </div>
+
+        <!-- Cumplimiento de macros -->
+        <div class="macros-card">
+          <div class="macros-header">
+            <span class="macros-title">📊 Cumplimiento de macros</span>
+          </div>
+          <div class="macros-grid">
+            <div class="macro-item">
+              <p class="macro-name">Proteína</p>
+              <p class="macro-meta">Meta: 120G</p>
+            </div>
+            <div class="macro-trophy">🏆</div>
+            <div class="macro-item">
+              <p class="macro-name">Calorías</p>
+              <p class="macro-meta">Meta: 520 cal</p>
+            </div>
+            <div class="macro-item">
+              <p class="macro-name">Carbohidratos</p>
+              <p class="macro-meta">Meta: 250g</p>
+            </div>
+            <div class="macro-spacer"></div>
+            <div class="macro-item">
+              <p class="macro-name">Grasas</p>
+              <p class="macro-meta">Meta: 50g</p>
+            </div>
+          </div>
+          <!-- Mini chart -->
+          <div class="mini-chart">
+            <canvas id="progressChart" width="300" height="80"></canvas>
+          </div>
+        </div>
+
+        <!-- Resumen semanal -->
+        <p class="section-title">Resumen semanal</p>
+        <div class="semanas-row">
+          <div class="semana-card active-week">
+            <p class="semana-label">Semana 1</p>
+            <div class="semana-icon">✅</div>
+            <p class="semana-status">Cumpliste tus metas</p>
+          </div>
+          <div class="semana-card almost-week">
+            <p class="semana-label">Semana 2</p>
+            <div class="semana-icon">📈</div>
+            <p class="semana-status">Casi llegas a la meta</p>
+          </div>
+          <div class="semana-card active-week">
+            <p class="semana-label">Semana 3</p>
+            <div class="semana-icon">✅</div>
+            <p class="semana-status">Cumpliste tus metas</p>
+          </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <p class="section-title">Estadísticas</p>
+        <div class="stats-row">
+          <div class="stat-card">
+            <p class="stat-label">Proteínas consumidas</p>
+            <p class="stat-value">100 G</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Peso actual</p>
+            <p class="stat-value">87 Kg</p>
+          </div>
+          <div class="stat-card highlight-stat">
+            <p class="stat-label">Cumplimiento general</p>
+            <p class="stat-value yellow-text">2/3 metas cumplidas</p>
+          </div>
+        </div>
+
+        <!-- Motivación -->
+        <div class="motivacion-card">
+          <div class="moti-icon">😺</div>
+          <div class="moti-text">
+            <p class="moti-title">¡Vas por buen camino!</p>
+            <p class="moti-desc">Tu constancia está dando resultados, sigue así y conseguirás tus objetivos.</p>
+          </div>
+          <div class="moti-trophy">🏆</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== SCREEN: PERFIL ====== -->
+    <div class="screen" id="screen-perfil">
+      <div class="screen-content">
+        <!-- Logo -->
+        <div class="perfil-logo">FIT<span class="brand-accent">MACRO</span></div>
+
+        <!-- Avatar grande -->
+        <div class="perfil-avatar-wrap">
+          <div class="perfil-avatar"></div>
+        </div>
+
+        <!-- Datos del perfil -->
+        <div class="perfil-campos">
+          <div class="perfil-campo">
+            <label class="campo-label">Usuario:</label>
+            <input type="text" class="campo-input" id="p-usuario" value="Jonathan" placeholder="Ingrese Nombre">
+          </div>
+          <div class="perfil-campo">
+            <label class="campo-label">Correo:</label>
+            <input type="email" class="campo-input" id="p-correo" value="Oaxaca@gmail.com" placeholder="Ingrese correo">
+          </div>
+          <div class="perfil-campo">
+            <label class="campo-label">Contraseña:</label>
+            <input type="password" class="campo-input" id="p-pass" value="••••••••••••••••" placeholder="Ingrese Contraseña">
+          </div>
+          <div class="perfil-actions-row">
+            <label class="campo-label campo-help" onclick="switchScreen('ayuda')">Ayuda</label>
+            <button class="btn-cerrar" onclick="cerrarSesion()">Cerrar Sesión</button>
+          </div>
+        </div>
+
+        <button class="btn-guardar-perfil" onclick="guardarPerfil()">Guardar Cambios</button>
+      </div>
+    </div>
+
+    <!-- ====== SCREEN: AYUDA ====== -->
+    <div class="screen" id="screen-ayuda">
+      <div class="screen-content">
+        <!-- Header -->
+        <div class="header-simple">
+          <button class="back-btn" onclick="switchScreen('perfil')">←</button>
+          <h2 class="screen-title-text">Ayuda</h2>
+        </div>
+
+        <p class="ayuda-section-label">PRIMEROS PASOS</p>
+
+        <div class="ayuda-item" onclick="toggleAyuda(this)">
+          <p class="ayuda-q">¿Cómo registro mis alimentos?</p>
+          <div class="ayuda-a hidden">En el apartado de registro, ubica "Registrar" puedes usar el buscador para seleccionar alimentos ya establecidos o registrar tu propio alimento personal y agrégarlos a tu comida del día.</div>
+        </div>
+
+        <div class="ayuda-item" onclick="toggleAyuda(this)">
+          <p class="ayuda-q">¿Qué muestra el resumen del día?</p>
+          <div class="ayuda-a hidden">Calorías y macros restantes para cumplir tus metas.</div>
+        </div>
+
+        <p class="ayuda-section-label">PROGRESO</p>
+
+        <div class="ayuda-item" onclick="toggleAyuda(this)">
+          <p class="ayuda-q">¿Cómo leo mi progreso semanal?</p>
+          <div class="ayuda-a hidden">El gráfico y las semanas reflejan tu constancia diaria.</div>
+        </div>
+
+        <div class="ayuda-item" onclick="toggleAyuda(this)">
+          <p class="ayuda-q">¿Qué es el cumplimiento de macros?</p>
+          <div class="ayuda-a hidden">Compara lo consumido vs tu meta. 100% = objetivo logrado.</div>
+        </div>
+
+        <div class="ayuda-tip">
+          <p>Registra todo, no solo lo "Bueno". Un registro honesto es la base de un progreso real.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODAL: AGREGAR ALIMENTO ====== -->
+    <div class="modal-overlay hidden" id="modalAgregar">
+      <div class="modal-box">
+        <h3 class="modal-title">Agregar Alimento</h3>
+        <input type="text" class="modal-input" id="m-nombre" placeholder="Nombre del alimento">
+        <input type="number" class="modal-input" id="m-cantidad" placeholder="Cantidad (g)">
+        <input type="number" class="modal-input" id="m-calorias" placeholder="Calorías (kcal)">
+        <input type="number" class="modal-input" id="m-proteina" placeholder="Proteína (g)">
+        <div class="modal-btns">
+          <button class="modal-btn cancel" onclick="closeModal('modalAgregar')">Cancelar</button>
+          <button class="modal-btn confirm" onclick="confirmarAgregar()">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODAL: EDITAR ====== -->
+    <div class="modal-overlay hidden" id="modalEditar">
+      <div class="modal-box">
+        <h3 class="modal-title">Editar Alimento</h3>
+        <input type="text" class="modal-input" id="e-nombre" placeholder="Nuevo nombre">
+        <input type="number" class="modal-input" id="e-cantidad" placeholder="Nueva cantidad (g)">
+        <div class="modal-btns">
+          <button class="modal-btn cancel" onclick="closeModal('modalEditar')">Cancelar</button>
+          <button class="modal-btn confirm" onclick="confirmarEditar()">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast hidden" id="toast"></div>
+
+    <!-- ====== NAVBAR ====== -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" id="nav-inicio" onclick="switchScreen('inicio')">
+        <div class="nav-icon">🏠</div>
+        <span>Inicio</span>
+      </div>
+      <div class="nav-item" id="nav-registro" onclick="switchScreen('registro')">
+        <div class="nav-icon">⊞</div>
+        <span>Registro</span>
+      </div>
+      <div class="nav-item" id="nav-progreso" onclick="switchScreen('progreso')">
+        <div class="nav-icon">📊</div>
+        <span>Progreso</span>
+      </div>
+      <div class="nav-item" id="nav-perfil" onclick="switchScreen('perfil')">
+        <div class="nav-icon">👤</div>
+        <span>Perfil</span>
+      </div>
+    </nav>
+
+  </div><!-- end phone-screen -->
+</div><!-- end app-frame -->
+
+<script src="app.js"></script>
+</body>
+</html>
