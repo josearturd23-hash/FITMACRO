@@ -13,6 +13,28 @@
 <div class="app-frame">
   <div class="phone-screen">
 
+    <!-- ====== SCREEN: LOGIN ====== -->
+    <div class="screen" id="screen-login">
+      <div class="screen-content" style="display:flex;flex-direction:column;justify-content:center;flex:1;padding-top:60px;">
+        <div class="perfil-logo" style="margin-bottom:8px;">FIT<span class="brand-accent">MACRO</span></div>
+        <p style="text-align:center;color:var(--text2);font-size:13px;margin-bottom:40px;">Tu compañero de nutrición diaria</p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="perfil-campo">
+            <label class="campo-label">Usuario</label>
+            <input type="text" class="campo-input" id="login-usuario" placeholder="Ingresa tu nombre">
+          </div>
+          <div class="perfil-campo">
+            <label class="campo-label">Contraseña</label>
+            <input type="password" class="campo-input" id="login-pass" placeholder="Ingresa tu contraseña">
+          </div>
+          <button class="btn-guardar-perfil" onclick="iniciarSesion()">Iniciar Sesión</button>
+        </div>
+
+        <p style="text-align:center;color:var(--text3);font-size:11px;margin-top:24px;">💪 Disciplina hoy, resultados mañana</p>
+      </div>
+    </div>
+
     <!-- ====== SCREEN: INICIO ====== -->
     <div class="screen active" id="screen-inicio">
       <div class="screen-content">
@@ -20,7 +42,7 @@
         <div class="header-bar">
           <div class="brand-logo">FIT<span class="brand-accent">MACRO</span></div>
           <div class="header-icons">
-            <button class="icon-btn" onclick="showToast('Notificaciones')">🔔</button>
+            <button class="icon-btn" onclick="mostrarAviso('Notificaciones')">🔔</button>
             <div class="avatar-circle"></div>
           </div>
         </div>
@@ -66,23 +88,26 @@
         <!-- Resumenes del día (shortcuts) -->
         <p class="section-title">Resumenes del día</p>
         <div class="shortcuts-row">
-          <div class="shortcut-item" onclick="switchScreen('registro')">
-            <div class="shortcut-icon food">🥗</div>
+          <div class="shortcut-item" id="sc-alimentos" onclick="toggleResumen('alimentos')">
+            <div class="shortcut-icon">🥗</div>
             <span>Alimentos</span>
           </div>
-          <div class="shortcut-item" onclick="switchScreen('registro')">
-            <div class="shortcut-icon grid">⊞</div>
+          <div class="shortcut-item" id="sc-registros" onclick="toggleResumen('registros')">
+            <div class="shortcut-icon">⊞</div>
             <span>Registros</span>
           </div>
-          <div class="shortcut-item" onclick="switchScreen('progreso')">
-            <div class="shortcut-icon chart">📊</div>
+          <div class="shortcut-item" id="sc-progreso" onclick="toggleResumen('progreso')">
+            <div class="shortcut-icon">📊</div>
             <span>Progreso</span>
           </div>
-          <div class="shortcut-item" onclick="showToast('Sugerencia del día: Come más proteína 💪')">
-            <div class="shortcut-icon thumb">👍</div>
+          <div class="shortcut-item" id="sc-sugerencia" onclick="toggleResumen('sugerencia')">
+            <div class="shortcut-icon">👍</div>
             <span>Sugerencia</span>
           </div>
         </div>
+
+        <!-- Acordeón de contenido -->
+        <div id="resumen-accordion" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -91,31 +116,31 @@
       <div class="screen-content">
         <!-- Header -->
         <div class="header-simple">
-          <button class="back-btn" onclick="switchScreen('inicio')">←</button>
+          <button class="back-btn" onclick="cambiarPantalla('inicio')">←</button>
           <h2 class="screen-title-text">Registrar Alimento</h2>
         </div>
 
         <!-- Buscador -->
         <div class="search-box">
-          <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar alimentos...." oninput="filterAlimentos(this.value)">
+          <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar alimentos...." oninput="filtrarAlimentos(this.value)">
         </div>
 
         <!-- Tipo de comida -->
         <p class="section-title">Comida</p>
         <div class="meal-types">
-          <div class="meal-type active" id="mt-desayuno" onclick="selectMeal('desayuno')">
+          <div class="meal-type active" id="mt-desayuno" onclick="seleccionarComida('desayuno')">
             <div class="meal-icon green-bg">🌿</div>
             <span>Desayuno</span>
           </div>
-          <div class="meal-type" id="mt-almuerzo" onclick="selectMeal('almuerzo')">
+          <div class="meal-type" id="mt-almuerzo" onclick="seleccionarComida('almuerzo')">
             <div class="meal-icon orange-bg">🥗</div>
             <span>Almuerzo</span>
           </div>
-          <div class="meal-type" id="mt-cena" onclick="selectMeal('cena')">
+          <div class="meal-type" id="mt-cena" onclick="seleccionarComida('cena')">
             <div class="meal-icon purple-bg">🌙</div>
             <span>Cena</span>
           </div>
-          <div class="meal-type" id="mt-snack" onclick="selectMeal('snack')">
+          <div class="meal-type" id="mt-snack" onclick="seleccionarComida('snack')">
             <div class="meal-icon red-bg">🍎</div>
             <span>Snack</span>
           </div>
@@ -133,6 +158,10 @@
           <button class="btn-action btn-editar" onclick="editarAlimento()">Editar</button>
           <button class="btn-action btn-eliminar" onclick="eliminarAlimento()">Eliminar</button>
         </div>
+
+        <!-- Lo que comí hoy -->
+        <p class="section-title">Lo que comí hoy</p>
+        <div id="registrosHoy" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
 
         <!-- Resumen del día en registro -->
         <p class="section-title">Resumen del día</p>
@@ -262,7 +291,7 @@
             <input type="password" class="campo-input" id="p-pass" value="••••••••••••••••" placeholder="Ingrese Contraseña">
           </div>
           <div class="perfil-actions-row">
-            <label class="campo-label campo-help" onclick="switchScreen('ayuda')">Ayuda</label>
+            <label class="campo-label campo-help" onclick="cambiarPantalla('ayuda')">Ayuda</label>
             <button class="btn-cerrar" onclick="cerrarSesion()">Cerrar Sesión</button>
           </div>
         </div>
@@ -276,7 +305,7 @@
       <div class="screen-content">
         <!-- Header -->
         <div class="header-simple">
-          <button class="back-btn" onclick="switchScreen('perfil')">←</button>
+          <button class="back-btn" onclick="cambiarPantalla('perfil')">←</button>
           <h2 class="screen-title-text">Ayuda</h2>
         </div>
 
@@ -310,16 +339,27 @@
       </div>
     </div>
 
+    <!-- ====== MODAL: SELECCIONAR ALIMENTO ====== -->
+    <div class="modal-overlay hidden" id="modalSeleccionarAlimento">
+      <div class="modal-box" style="max-height:70vh;display:flex;flex-direction:column;">
+        <h3 class="modal-title">Seleccionar Alimento</h3>
+        <input type="text" class="modal-input" placeholder="🔍 Buscar..." oninput="mostrarModalAlimentos(this.value)" style="margin-bottom:10px;">
+        <div id="modal-alimentos-list" style="overflow-y:auto;display:flex;flex-direction:column;gap:6px;flex:1;"></div>
+        <div class="modal-btns" style="margin-top:10px;">
+          <button class="modal-btn cancel" onclick="cerrarModal('modalSeleccionarAlimento')">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ====== MODAL: AGREGAR ALIMENTO ====== -->
     <div class="modal-overlay hidden" id="modalAgregar">
       <div class="modal-box">
         <h3 class="modal-title">Agregar Alimento</h3>
-        <input type="text" class="modal-input" id="m-nombre" placeholder="Nombre del alimento">
+        <p id="m-modal-nombre" style="font-size:14px;font-weight:700;color:var(--yellow);margin-bottom:4px;"></p>
+        <p id="m-modal-base" style="font-size:11px;color:var(--text2);margin-bottom:12px;"></p>
         <input type="number" class="modal-input" id="m-cantidad" placeholder="Cantidad (g)">
-        <input type="number" class="modal-input" id="m-calorias" placeholder="Calorías (kcal)">
-        <input type="number" class="modal-input" id="m-proteina" placeholder="Proteína (g)">
         <div class="modal-btns">
-          <button class="modal-btn cancel" onclick="closeModal('modalAgregar')">Cancelar</button>
+          <button class="modal-btn cancel" onclick="cerrarModal('modalAgregar')">Cancelar</button>
           <button class="modal-btn confirm" onclick="confirmarAgregar()">Guardar</button>
         </div>
       </div>
@@ -328,11 +368,11 @@
     <!-- ====== MODAL: EDITAR ====== -->
     <div class="modal-overlay hidden" id="modalEditar">
       <div class="modal-box">
-        <h3 class="modal-title">Editar Alimento</h3>
-        <input type="text" class="modal-input" id="e-nombre" placeholder="Nuevo nombre">
+        <h3 class="modal-title">Editar Cantidad</h3>
+        <p id="e-nombre" style="font-size:14px;font-weight:700;color:var(--yellow);margin-bottom:12px;"></p>
         <input type="number" class="modal-input" id="e-cantidad" placeholder="Nueva cantidad (g)">
         <div class="modal-btns">
-          <button class="modal-btn cancel" onclick="closeModal('modalEditar')">Cancelar</button>
+          <button class="modal-btn cancel" onclick="cerrarModal('modalEditar')">Cancelar</button>
           <button class="modal-btn confirm" onclick="confirmarEditar()">Guardar</button>
         </div>
       </div>
@@ -343,19 +383,19 @@
 
     <!-- ====== NAVBAR ====== -->
     <nav class="bottom-nav">
-      <div class="nav-item active" id="nav-inicio" onclick="switchScreen('inicio')">
+      <div class="nav-item active" id="nav-inicio" onclick="cambiarPantalla('inicio')">
         <div class="nav-icon">🏠</div>
         <span>Inicio</span>
       </div>
-      <div class="nav-item" id="nav-registro" onclick="switchScreen('registro')">
+      <div class="nav-item" id="nav-registro" onclick="cambiarPantalla('registro')">
         <div class="nav-icon">⊞</div>
         <span>Registro</span>
       </div>
-      <div class="nav-item" id="nav-progreso" onclick="switchScreen('progreso')">
+      <div class="nav-item" id="nav-progreso" onclick="cambiarPantalla('progreso')">
         <div class="nav-icon">📊</div>
         <span>Progreso</span>
       </div>
-      <div class="nav-item" id="nav-perfil" onclick="switchScreen('perfil')">
+      <div class="nav-item" id="nav-perfil" onclick="cambiarPantalla('perfil')">
         <div class="nav-icon">👤</div>
         <span>Perfil</span>
       </div>
